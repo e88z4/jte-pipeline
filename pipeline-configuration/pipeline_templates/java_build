@@ -1,0 +1,41 @@
+build_agent{
+    checkout([
+        $class: 'GitSCM',
+        branches: scm.branches,
+        doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
+        userRemoteConfigs: scm.userRemoteConfigs,
+        extensions: scm.extensions.findAll{!(it instanceof jenkins.plugins.git.GitSCMSourceDefaults)} +
+        [$class: 'CloneOption', noTags: false, shallow: false, honorRefspec: false] +
+        [$class: 'SubmoduleOption', recursiveSubmodules: true]
+    ])
+
+    container('sdk'){
+        build()
+
+        withSonarQubeEnvironment target: "SonarQube Prod",{
+            static_code_analysis()
+        }
+
+        on_branch to: development,{
+            publish_snapshot()
+        }
+
+        on_branch to: release,{
+            def release_scope = get_release_scope()
+            withGit url: scm.userRemoteConfigs.url, cred: scm.userRemoteConfigs.credentialsId,{
+                publish_release_candidate(release_scope)
+            }
+        }
+
+        on_branch to: main,{
+            def release_scope = get_release_scope()
+            withGit url: scm.getUrl(), cred: scm.getCredentialsId(),{
+                publish_release(release_scope)
+            }
+        }
+    }
+
+    container('image-build-sdk'){
+        image_build()
+    }
+}
