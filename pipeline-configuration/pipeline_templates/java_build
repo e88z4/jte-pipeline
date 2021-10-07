@@ -29,7 +29,7 @@ build_agent{
 
         on_branch to: main,{
             def release_scope = get_release_scope()
-            withGit url: scm.getUrl(), cred: scm.getCredentialsId(),{
+            withGit url: scm.userRemoteConfigs.url, cred: scm.userRemoteConfigs.credentialsId,{
                 publish_release(release_scope)
             }
         }
