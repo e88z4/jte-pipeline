@@ -1,7 +1,3 @@
-jte{
-    pipeline_template = "java_build"
-}
-
 @merge libraries{
     git
     jenkins
