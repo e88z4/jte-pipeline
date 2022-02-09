@@ -12,30 +12,33 @@ build_agent{
     container('sdk'){
         build()
 
-        withSonarQubeEnvironment target: "SonarQube Prod",{
-            static_code_analysis()
-        }
+        withSonarQubeEnvironment target: "SonarQube",{
+            if(env.CHANGE_ID)
+                static_code_analysis(
+                    'sonar.pullrequest.key': env.CHANGE_ID
+                    'sonar.pullrequest.branch': env.BRANCH_NAME
+                    'sonar.pullrequest.base': env.CHANGE_TARGET
+                )
+            else
+                static_code_analysis()
+        }        
 
-        on_branch to: development,{
+        on_branch to: branch_build,{
             publish_snapshot()
         }
 
-        on_branch to: release,{
+        on_tag to: release_candidate_tag_build,{
             def release_scope = get_release_scope()
             withGit url: scm.userRemoteConfigs.url, cred: scm.userRemoteConfigs.credentialsId,{
-                publish_release_candidate(release_scope)
+                publish_release_candidate()
             }
         }
 
-        on_branch to: main,{
+        on_tag to: release_tag_build,{
             def release_scope = get_release_scope()
             withGit url: scm.userRemoteConfigs.url, cred: scm.userRemoteConfigs.credentialsId,{
-                publish_release(release_scope)
+                publish_release()
             }
         }
-    }
-
-    container('image-build-sdk'){
-        image_build()
     }
 }
