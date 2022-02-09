@@ -3,7 +3,7 @@ package container.template
 public void create(config){
     return containerTemplate(
         name: 'jnlp',
-        image: 'prod-dtr-ca.sunlifecorp.com/devopstoolchain/jenkins-inbound-agent:4.7-1',
+        image: 'jenkins-inbound-agent:latest',
         alwaysPullImage: true,
         resourceRequestCpu: "300m",
         resourceRequestMemory: "256Mi",
