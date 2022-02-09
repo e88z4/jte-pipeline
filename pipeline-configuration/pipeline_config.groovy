@@ -27,7 +27,7 @@
 }
 
 keywords{
-    development =  /^([Dd]evelop(ment|er|))|([Hh]otfix\/.*)|([Ff]eature\/.*)|([Pp][Rr]-.*)$/
-    release =  /^[Rr]elease\/.*$/
-    main    =  /^[Mm](aster|ain)$/
+    branch_build =  /^([Dd]evelop(ment|er|))|([Hh]otfix\/.*)|([Ff]eature\/.*)|([Pp][Rr]-.*)|([Rr]elease\/.*)|([Mm](aster|ain))$/
+    release_candidate_tag_build =  /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-rc\.(0|[1-9]\d*))$/
+    release_tag_build    =  /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$/
 }
