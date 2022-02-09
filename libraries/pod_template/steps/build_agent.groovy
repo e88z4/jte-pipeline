@@ -2,36 +2,25 @@ package libraries.pod_template.steps
 
 import container.template.JnlpContainer
 import container.template.SdkContainer
-import container.template.DockerBuildContainer
-import kubernetes.pod.volume.DockerBuildVolume
 import kubernetes.Namespace
 import kubernetes.Cloud
-import kubernetes.pod.yamlPatch.DockerBuildContainerPatch
 
 void call(Closure body){
-    def cloud = config.cloud
+    def cloud = 'my-jenkins-cloud'
     def containers = []
     def volumes = []
-    def namespace = env.SLF_JENKINS_ENVIRONMENT == 'Prod'? Namespace.prod_jenkinsagents_ns : Namespace.stage_jenkinsagents_ns
+    def namespace = 'my-kubernetes-build-agent-namespace'
     def yamlPatch = ''
-    def nodeSelector = ['sunlife.com/node.licensing.none=true',
-                        'sunlife.com/node.network=corp',
-                        'sunlife.com/node.sdlc.prod=true']
+    def nodeSelector = ['my-company.com/node.name=server123',
+                        'my-company.com/node.cloud=aws'
+                        'my-company.com/node.region=us-east-1',
+                        'my-company.com/node.zone=use-east-1a']
 
     containers << (new JnlpContainer()).create(config)
 
     if(config.build_agent != null){
         if(config.build_agent.sdk != null){
             containers << (new SdkContainer()).create(config)
-        }
-
-        if(config.build_agent.docker_build != null){
-            if(config.build_agent.docker_build.enabled){
-                containers << (new DockerBuildContainer().create(config))
-                namespace = Namespace.prod_imagebuilderpipeline_ns
-                cloud = Cloud.prod_whs_cloud
-                yamlPatch = (new DockerBuildContainerPatch()).create()
-            }
         }
     }
 
