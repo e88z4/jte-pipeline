@@ -21,21 +21,18 @@ fields{
                 tasks = String
                 options = String
                 properties = String
-                credential = ["Artifactory Dev", "Artifactory Stage", "Artifactory Prod"]
             }
 
             release_candidate{
                 tasks = String
                 options = String
                 properties = String
-                credential = ["Artifactory Dev", "Artifactory Stage", "Artifactory Prod"]
             }
 
             release{
                 tasks = String
                 options = String
                 properties = String
-                credential = ["Artifactory Dev", "Artifactory Stage", "Artifactory Prod"]
             }
         }
     }
