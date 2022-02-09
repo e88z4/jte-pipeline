@@ -3,10 +3,10 @@
     jenkins
     utility
     pod_template{
-        @override cloud = "prod-ucp-ca--prod-devops-jenkinsagents-ns"
+        @override cloud = "default-cloud"
         build_agent{
             sdk{
-                @override image = "prod-dtr-ca.sunlifecorp.com/devopstoolchain/maven:3.8.1-openjdk-8"
+                @override image = "maven:3.8.4-openjdk-11"
                 @override resource{
                     cpu{
                         request_mcore = "750"
